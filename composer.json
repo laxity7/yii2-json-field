@@ -1,0 +1,26 @@
+{
+    "name": "laxity7/yii2-json-field",
+    "description": "Behavior that convert array to JSON before save data in model, and also convert JSON to an array after saving and retrieving data",
+    "license": "MIT",
+    "homepage": "https://github.com/laxity7/yii2-json-field",
+    "minimum-stability": "stable",
+    "keywords": ["yii2", "behaviors", "json"],
+    "type": "yii2-behaviors",
+    "authors": [
+        {
+            "name": "Vlad Varlamov",
+            "email": "work@laxity.ru",
+            "homepage": "http://laxity.ru/"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+          "laxity7\\yii2\\behaviors\\": ""
+      }
+    },    
+    "require": {
+        "php": ">=5.4",
+        "yiisoft/yii2": "2.0.*",
+        "ext-json": "*"
+    }
+}
