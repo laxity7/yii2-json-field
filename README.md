@@ -4,9 +4,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/laxity7/yii2-json-field.svg)](https://packagist.org/packages/laxity7/yii2-json-field)
 [![Total Downloads](https://img.shields.io/packagist/dt/laxity7/yii2-json-field.svg)](https://packagist.org/packages/laxity7/yii2-json-field)
 
-Work with JSON fields in Yii2
-
-This behavior adds advanced support for working with JSON data in Yii2 AR models.
+This behavior adds advanced support for working with JSON data in Yii2 active record models.
 Behavior convert array to JSON before save data in model, and also convert JSON to an array after saving and retrieving data.
 Use JSON fields like normal fields with an array or object.
 
@@ -16,12 +14,6 @@ Install via composer
 
 ```shell
 composer require laxity7/yii2-json-field
-```
-
-Or you may add dependency manually in composer.json:
-
-```
- "laxity7/yii2-json-field": "*"
 ```
 
 ## How to use
@@ -53,32 +45,39 @@ When TRUE in the database, the field can be null, when FALSE will save an empty 
 So, the complete list of settings will look like this:
 
 ```php
-/** @inheritdoc */
-public function behaviors(): array
-{
-    return [
-        [
-            'class'        => \laxity7\yii2\behaviors\JsonFieldBehavior::class,
-            'fields'       => ['foo_data', 'bar_data'],
-            'jsonOptions'  => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
-            'skipEmpty'    => false,
-            'defaultValue' => ['foo' => 'bar'],
-            'asArray'      => true,
-        ],
-    ];
-}
-```
+use laxity7\yii2\behaviors\JsonFieldBehavior;
+use yii\db\ActiveRecord;
 
-Based on these parameters may be approximately the code
-
-```php
-public function updateBar(int $id, array $barData): array
-{
-    $model = Foo::findOne(['id' => $id]);
-    $model->foo_data['foo'] = 'bar1';
-    $model->bar_data['bar'] = array_merge($model->bar_data['bar'], $barData);
-    $model->save();
-
-    return $model->bar_data['bar'];
+/**
+* @property int $id
+* @property array $foo_data
+* @property array $bar_data
+ */
+class Foo extends ActiveRecord {
+    /** @inheritdoc */
+    public function behaviors(): array
+    {
+        return [
+            [
+                'class'        => JsonFieldBehavior::class,
+                'fields'       => ['foo_data', 'bar_data'],
+                'jsonOptions'  => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+                'skipEmpty'    => false,
+                'defaultValue' => ['foo' => 'bar'],
+                'asArray'      => true,
+            ],
+        ];
+    }
+    
+    // Based on these parameters may be approximately the code
+    public function updateBar(int $id, array $barData): array
+    {
+        $model = self::findOne(['id' => $id]);
+        $model->foo_data['foo'] = 'bar1';
+        $model->bar_data['bar'] = array_merge($model->bar_data['bar'], $barData);
+        $model->save();
+    
+        return $model->bar_data['bar'];
+    }
 }
 ```
